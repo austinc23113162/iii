@@ -71,6 +71,9 @@ my_usebit2: usebit2.o bit2.o
 useuarray2_test: uarray2_test.o uarray2.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
+usebit2_test: bit2_test.o bit2.o
+	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
+
 clean:
 	rm -f sudoku unblackedges my_useuarray2 my_usebit2 *.o
 

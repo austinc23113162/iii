@@ -85,8 +85,8 @@ extern void *UArray2_at(T uarray2, int col, int row);
  *
  ************************/
 extern void UArray2_map_col_major(T uarray2,
-                                  void apply(int i, int j, UArray2_T a,
-                                             void *p1, void *p2),
+                                  void apply(int col, int row, T uarray2,
+                                             void *p1, void *cl),
                                   void *cl);
 
 /********** UArray2_map_row_major ********
@@ -102,8 +102,8 @@ extern void UArray2_map_col_major(T uarray2,
  *
  ************************/
 extern void UArray2_map_row_major(T uarray2,
-                                  void apply(int col, int row, UArray2_T a,
-                                             void *p1, void *p2),
+                                  void apply(int col, int row, T uarray2,
+                                             void *p1, void *cl),
                                   void *cl);
 
 /********** UArray2_free ********

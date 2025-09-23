@@ -3,8 +3,7 @@
 #include "assert.h"
 #include "mem.h"
 
-struct UArray2_T
-{
+struct UArray2_T {
         int width;
         int height;
         int size;
@@ -16,14 +15,13 @@ UArray2_T UArray2_new(int col, int row, int size)
         UArray2_T uarray2;
         NEW(uarray2);
 
-        assert(col > 0 && col > 0 && size > 0);
+        assert(col >= 0 && row > 0 && size > 0);
         uarray2->width = col;
         uarray2->height = row;
         uarray2->size = size;
         uarray2->outer_arr = UArray_new(col, sizeof(UArray_T));
 
-        for (int i = 0; i < col; i++)
-        {
+        for (int i = 0; i < col; i++) {
                 UArray_T inner_arr = UArray_new(row, size);
 
                 UArray_T *innerp = UArray_at(uarray2->outer_arr, i);
@@ -72,10 +70,11 @@ void UArray2_map_col_major(UArray2_T uarray2,
                                   void *cl)
 {
         assert(uarray2);
-        for(int col = 0; col < uarray2->width; col++) {
-                for(int row = 0; row < uarray2->height; row++) {
+        for (int col = 0; col < uarray2->width; col++) {
+                for (int row = 0; row < uarray2->height; row++) {
                         UArray_T *innerp = UArray_at(uarray2->outer_arr, col);
                         UArray_T inner = *innerp;
+                        assert(sizeof(inner) == UArray_size(uarray2->outer_arr));
 
                         apply(col, row, uarray2, UArray_at(inner, row), cl);
                 }
@@ -90,10 +89,11 @@ void UArray2_map_row_major(UArray2_T uarray2,
                                   void *cl) 
 {
         assert(uarray2);
-        for(int row = 0; row < uarray2->height; row++) {
-                for(int col = 0; col < uarray2->width; col++) {
+        for (int row = 0; row < uarray2->height; row++) {
+                for (int col = 0; col < uarray2->width; col++) {
                         UArray_T *innerp = UArray_at(uarray2->outer_arr, col);
                         UArray_T inner = *innerp;
+                        assert(sizeof(inner) == UArray_size(uarray2->outer_arr));
 
                         apply(col, row, uarray2, UArray_at(inner, row), cl);
                 }
@@ -104,7 +104,7 @@ void UArray2_map_row_major(UArray2_T uarray2,
 void UArray2_free(UArray2_T *uarray2) {
         assert(uarray2 && *uarray2);
 
-        for(int col = 0; col < (*uarray2)->width; col++) {
+        for (int col = 0; col < (*uarray2)->width; col++) {
                 UArray_T *innerp = UArray_at((*uarray2)->outer_arr, col);
                 UArray_free(innerp);
         }

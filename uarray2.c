@@ -70,12 +70,14 @@ void UArray2_map_col_major(UArray2_T uarray2,
                                   void *cl)
 {
         assert(uarray2);
-        for (int col = 0; col < uarray2->width; col++) {
-                for (int row = 0; row < uarray2->height; row++) {
-                        UArray_T *innerp = UArray_at(uarray2->outer_arr, col);
-                        UArray_T inner = *innerp;
-                        assert(sizeof(inner) == UArray_size(uarray2->outer_arr));
+        UArray_T outer_arr = uarray2->outer_arr;
 
+        for (int col = 0; col < uarray2->width; col++) {
+                UArray_T *innerp = UArray_at(outer_arr, col);
+                UArray_T inner = *innerp;
+                assert(sizeof(inner) == UArray_size(outer_arr));
+
+                for (int row = 0; row < uarray2->height; row++) {
                         apply(col, row, uarray2, UArray_at(inner, row), cl);
                 }
         }
@@ -89,12 +91,13 @@ void UArray2_map_row_major(UArray2_T uarray2,
                                   void *cl) 
 {
         assert(uarray2);
+        UArray_T outer_arr = uarray2->outer_arr;
+
         for (int row = 0; row < uarray2->height; row++) {
                 for (int col = 0; col < uarray2->width; col++) {
-                        UArray_T *innerp = UArray_at(uarray2->outer_arr, col);
+                        UArray_T *innerp = UArray_at(outer_arr, col);
                         UArray_T inner = *innerp;
-                        assert(sizeof(inner) == UArray_size(uarray2->outer_arr));
-
+                        assert(sizeof(inner) == UArray_size(outer_arr));
                         apply(col, row, uarray2, UArray_at(inner, row), cl);
                 }
         }                         

@@ -52,7 +52,6 @@ int Bit2_get(Bit2_T bit2, int col, int row)
         Bit_T *innerp = UArray_at(bit2->outer_bits, col);
         Bit_T inner = *innerp;
         assert(sizeof(inner) == UArray_size(bit2->outer_bits));
-        
 
         return Bit_get(inner, row);
 }
@@ -80,12 +79,14 @@ void Bit2_map_col_major(Bit2_T bit2,
                                   void *cl)
 {
         assert(bit2);
-        for (int col = 0; col < bit2->width; col++) {
-                for (int row = 0; row < bit2->height; row++) {
-                        Bit_T *innerp = UArray_at(bit2->outer_bits, col);
-                        Bit_T inner = *innerp;
-                        assert(sizeof(inner) == UArray_size(bit2->outer_bits));
+        UArray_T outer_bits = bit2->outer_bits;
 
+        for (int col = 0; col < bit2->width; col++) {
+                Bit_T *innerp = UArray_at(outer_bits, col);
+                Bit_T inner = *innerp;
+                assert(sizeof(inner) == UArray_size(outer_bits));
+
+                for (int row = 0; row < bit2->height; row++) {
                         apply(col, row, bit2, Bit_get(inner, row), cl);
                 }
         }
@@ -99,11 +100,13 @@ void Bit2_map_row_major(Bit2_T bit2,
                                   void *cl)
 {
         assert(bit2);
+        UArray_T outer_bits = bit2->outer_bits;
+
         for (int row = 0; row < bit2->height; row++) {
                 for (int col = 0; col < bit2->width; col++) {
-                        Bit_T *innerp = UArray_at(bit2->outer_bits, col);
+                        Bit_T *innerp = UArray_at(outer_bits, col);
                         Bit_T inner = *innerp;
-                        assert(sizeof(inner) == UArray_size(bit2->outer_bits));
+                        assert(sizeof(inner) == UArray_size(outer_bits));
 
                         apply(col, row, bit2, Bit_get(inner, row), cl);
                 }

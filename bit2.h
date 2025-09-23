@@ -22,4 +22,5 @@ extern void Bit2_map_col_major(
         void apply(int i, int j, Bit2_T b, int value, void *cl),
         void *cl);
 
+#undef T
 #endif 

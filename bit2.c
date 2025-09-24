@@ -18,7 +18,7 @@ Bit2_T Bit2_new(int col, int row)
         assert(col >= 0 && row >= 0);
         bit2->width = col;
         bit2->height = row;
-        bit2->outer_bits = UArray_new(col, sizeof(Bit2_T));
+        bit2->outer_bits = UArray_new(col, sizeof(Bit_T));
 
         for (int i = 0; i < col; i++)
         {

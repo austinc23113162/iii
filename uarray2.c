@@ -15,7 +15,7 @@ UArray2_T UArray2_new(int col, int row, int size)
         UArray2_T uarray2;
         NEW(uarray2);
 
-        assert(col >= 0 && row > 0 && size > 0);
+        assert(col >= 0 && row >= 0 && size > 0);
         uarray2->width = col;
         uarray2->height = row;
         uarray2->size = size;

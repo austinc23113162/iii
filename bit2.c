@@ -4,6 +4,8 @@
 #include "assert.h"
 #include "mem.h"
 
+#include <stdlib.h>
+
 struct Bit2_T {
         int width;
         int height;
@@ -33,19 +35,19 @@ Bit2_T Bit2_new(int col, int row)
 
 int Bit2_width(Bit2_T bit2)
 {
-        assert(bit2);
+        assert(bit2 != NULL);
         return bit2->width;
 }
 
 int Bit2_height(Bit2_T bit2)
 {
-        assert(bit2);
+        assert(bit2 != NULL);
         return bit2->height;
 }
 
 int Bit2_get(Bit2_T bit2, int col, int row)
 {
-        assert(bit2);
+        assert(bit2 != NULL);
         assert(col >= 0 && col < bit2->width);
         assert(row >= 0 && row < bit2->height);
 
@@ -58,7 +60,7 @@ int Bit2_get(Bit2_T bit2, int col, int row)
 
 int Bit2_put(Bit2_T bit2, int col, int row, int bit)
 {
-        assert(bit2);
+        assert(bit2 != NULL);
         assert(col >= 0 && col < bit2->width);
         assert(row >= 0 && row < bit2->height);
         assert(bit == 0 || bit == 1);
@@ -78,7 +80,7 @@ void Bit2_map_col_major(Bit2_T bit2,
                                              int bit, void *cl),
                                   void *cl)
 {
-        assert(bit2);
+        assert(bit2 != NULL);
         UArray_T outer_bits = bit2->outer_bits;
 
         for (int col = 0; col < bit2->width; col++) {
@@ -93,13 +95,12 @@ void Bit2_map_col_major(Bit2_T bit2,
 
 }
 
-
 void Bit2_map_row_major(Bit2_T bit2,
                                   void apply(int col, int row, Bit2_T bit2,
                                              int bit, void *cl),
                                   void *cl)
 {
-        assert(bit2);
+        assert(bit2 != NULL);
         UArray_T outer_bits = bit2->outer_bits;
 
         for (int row = 0; row < bit2->height; row++) {
@@ -113,9 +114,8 @@ void Bit2_map_row_major(Bit2_T bit2,
         }
 }
 
-
 void Bit2_free(Bit2_T *bit2) {
-        assert(bit2 && *bit2);
+        assert(bit2 != NULL && *bit2 != NULL);
 
         for (int col = 0; col < (*bit2)->width; col++) {
                 Bit_T *innerp = UArray_at((*bit2)->outer_bits, col);

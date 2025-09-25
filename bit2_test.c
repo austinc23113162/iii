@@ -4,8 +4,8 @@
 
 #include <bit2.h>
 
-const int DIM1 = 0;
-const int DIM2 = 0;
+const int DIM1 = 10;
+const int DIM2 = 11;
 
 const int MARKER = 1;  /* can only be 1 or 0 */
 
@@ -31,6 +31,7 @@ main(int argc, char *argv[])
         bool OK = true;
 
         int x;
+        (void)x;
 
         test_array = Bit2_new(DIM1, DIM2);
 

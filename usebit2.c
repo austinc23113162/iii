@@ -49,7 +49,7 @@ main(int argc, char *argv[])
 
         test_array = Bit2_new(DIM1, DIM2);
 
-        OK = (Bit2_width(test_array) == DIM1) && 
+        OK = (Bit2_width(test_arr) == DIM1) && 
              (Bit2_height(test_array) == DIM2);
 
 

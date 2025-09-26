@@ -1,3 +1,26 @@
+/**************************************************************
+ *
+ *                       bit2.h
+ *
+ *     Assignment: iii (CS 40 A2)
+ *     Authors:    <tvales01>
+ *     Date:       <2025-09-25>
+ *
+ *     Public interface for a 2-D array of bits (0/1). Provides
+ *     width/height, get/put of a bit at (col,row), and row/col-major
+ *     mapping that passes the bit value. No pointer-to-bit API.
+ *
+ *     Indices and order:
+ *       i = column (0..width-1), j = row (0..height-1).
+ *       Row-major map: rows outer, columns inner.
+ *       Col-major map: columns outer, rows inner.
+ *
+ *     Notes:
+ *       get returns 0 or 1; put sets 0/1 and returns previous value.
+ *       Function contracts are documented in bit2.c.
+ *
+ **************************************************************/
+
 #ifndef BIT2_INCLUDED
 #define BIT2_INCLUDED
 

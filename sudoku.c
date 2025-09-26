@@ -1,3 +1,27 @@
+/**************************************************************
+ *
+ *                       sudoku.c
+ *
+ *     Assignment: iii (CS 40 A2)
+ *     Authors:    <tvales01, >
+ *     Date:       <2025-09-25>
+ *
+ *     Predicate program: exit(0) iff input is a solved 9×9 Sudoku.
+ *     Reads a PGM (graymap) from stdin or one filename with Pnmrdr;
+ *     asserts: type==gray, width==height==9, denominator==9. Loads a
+ *     9×9 UArray2<int>, then verifies each row, column, and each 3×3
+ *     block contains digits 1..9 exactly once. Prints nothing; exit
+ *     status is the only result (0=solved, 1=not solved).
+ *
+ *     Dependencies:
+ *       pnmrdr.h, uarray2.h, assert.h, mem.h, stdlib/stdio.
+ *
+ *     Checked runtime errors (CREs):
+ *       >1 argument; file open failure; not a graymap; wrong dims or
+ *       denominator; malformed data as detected by Pnmrdr.
+ *
+ **************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "assert.h"
@@ -7,7 +31,19 @@
 
 #define N 9
 
-/* bit mask helper: bit v lives at (1 << v), with v in 1..9 */
+/********** add_or_dup (static helper) ********
+ * Add digit v (1..9) to a bitmask of seen digits, or report duplicate.
+ *
+ * Parameters:
+ *      int mask: current mask of seen digits (bits 1..9)
+ *      int v:    digit in 1..9
+ *
+ * Returns:
+ *      int: updated mask, or -1 if v was already present
+ *
+ * CRE
+ *      CRE if v ∉ [1,9]
+ ************************/
 static inline int add_or_dup(int mask, int v)
 {
     assert(1 <= v && v <= 9);
@@ -16,6 +52,18 @@ static inline int add_or_dup(int mask, int v)
     return mask | bit;
 }
 
+/********** check_rows / check_cols / check_blocks (static) ********
+ * Validate that each row/column/3×3 block contains digits 1..9 exactly once.
+ *
+ * Parameters:
+ *      UArray2_T g: 9×9 array of ints
+ *
+ * Returns:
+ *      int: 1 if valid, 0 if any violation (out of range or duplicate)
+ *
+ * Expects:
+ *      g not NULL; size of each element is sizeof(int).
+ ************************/
 static int check_rows(UArray2_T g)
 {
     for (int j = 0; j < N; j++) {
@@ -64,6 +112,25 @@ static int check_blocks(UArray2_T g)
     return 1;
 }
 
+/********** main ********
+ * Predicate program: exit 0 iff input is a solved 9×9 Sudoku PGM.
+ *
+ * Parameters:
+ *      argc/argv: 0 args -> read stdin; 1 arg -> open filename
+ *
+ * Behavior:
+ *      Uses Pnmrdr to read a graymap; asserts md.type == Pnmrdr_gray,
+ *      md.width == md.height == 9, and md.denominator == 9.
+ *      Reads 81 values into a 9×9 UArray2<int>; validates rows/cols/blocks.
+ *
+ * Returns:
+ *      EXIT_SUCCESS (0) if solved; EXIT_FAILURE (1) otherwise.
+ *
+ * CRE
+ *      CRE if >1 argument
+ *      CRE if file open fails
+ *      CRE if image is not a graymap or has wrong dimensions/denominator
+ ************************/
 int main(int argc, char *argv[])
 {
     /* args per spec: 0 args -> stdin; 1 arg -> filename; >1 -> CRE */

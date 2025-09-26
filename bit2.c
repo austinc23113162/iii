@@ -42,6 +42,8 @@
 
 #include <stdlib.h>
 
+
+
 struct Bit2_T {
         int width;
         int height;
@@ -86,6 +88,20 @@ Bit2_T Bit2_new(int col, int row)
         return bit2;
 }
 
+/********** Bit2_width ********
+ *
+ * Returns the width of the bit2 array
+ * 
+ * Parameters:
+ *      Bit2_T bit2: the bit2 array to check
+ *
+ * Return:
+ *      the width of the given bit2 arary
+ *
+ * Notes:
+ *      CRE if bit2 is null
+ * 
+ ************************/
 /********** Bit2_width / Bit2_height ********
  * Return the grid dimensions.
  *
@@ -104,12 +120,42 @@ int Bit2_width(Bit2_T bit2)
         return bit2->width;
 }
 
+/********** Bit2_height ********
+ *
+ * Returns the height of the bit2 array
+ * 
+ * Parameters:
+ *      Bit2_T bit2: the bit2 array to check
+ *
+ * Return:
+ *      the height of the given bit2 arary
+ *
+ * Notes:
+ *      CRE if bit2 is null
+ * 
+ ************************/
 int Bit2_height(Bit2_T bit2)
 {
         assert(bit2 != NULL);
         return bit2->height;
 }
 
+/********** Bit2_get ********
+ *
+ * Returns the bit value at the given index
+ * 
+ * Parameters:
+ *      Bit2_T bit2: the bit2 array to check
+ *      int col:     the column to check
+ *      int row:     the row to check
+ * 
+ * Return:
+ *      the bit value at the index
+ *
+ * Notes:
+ *      CRE if bit2 is null or if index is out of bounds
+ * 
+ ************************/
 /********** Bit2_get ********
  * Read the bit at (col,row).
  *
@@ -138,6 +184,26 @@ int Bit2_get(Bit2_T bit2, int col, int row)
         return Bit_get(inner, row);
 }
 
+/********** Bit2_put ********
+ *
+ * Put the given bit at the given index
+ * 
+ * Parameters:
+ *      Bit2_T bit2: the bit2 array to check
+ *      int col:     the column to put
+ *      int row:     the row to put
+ *      int bit:     the bit value to put (0 or 1)
+ *
+ * Return:
+ *      the original bit value
+ *
+ * Notes:
+ *      CRE if bit2 is null or if index is out of bounds or given bit value is
+ *      not 0 or 1
+ * 
+ *      this function modifies the given bit2 array 
+ * 
+ ************************/
 /********** Bit2_put ********
  * Write the bit at (col,row), returning the previous value.
  *
@@ -172,6 +238,22 @@ int Bit2_put(Bit2_T bit2, int col, int row, int bit)
         return prev;
 }
 
+/********** Bit2_map_col_major ********
+ *
+ * Calls apply on every element in the 2d array going column by column
+ *
+ * Parameters:
+ *      Bit2_T bit2:  the bit2 array to traverse
+ *      void apply(): the function to be called on each element
+ *      void *cl:     the closure variable
+ *
+ * Returns: 
+ *      none
+ * 
+ * Notes:
+ *      CRE if bit2 is null
+ *
+ ************************/
  /********** Bit2_map_row_major ********
  * Visit every element in row-major order and call apply for each.
  *
@@ -232,6 +314,54 @@ void Bit2_map_col_major(Bit2_T bit2,
 
 }
 
+/********** Bit2_map_row_major ********
+ *
+ * Calls apply on every element in the 2d array going row by row
+ *
+ * Parameters:
+ *      Bit2_T bit2:  the bit2 array to traverse
+ *      void apply(): the function to be called on each element
+ *      void *cl:     the closure variable
+ *
+ * Returns: 
+ *      none
+ * 
+ * Notes:
+ *      CRE if bit2 is null
+ *
+ ************************/
+void Bit2_map_row_major(Bit2_T bit2,
+                                  void apply(int col, int row, Bit2_T bit2,
+                                             int bit, void *cl),
+                                  void *cl)
+{
+        assert(bit2 != NULL);
+        UArray_T outer_bits = bit2->outer_bits;
+
+        for (int row = 0; row < bit2->height; row++) {
+                for (int col = 0; col < bit2->width; col++) {
+                        Bit_T *innerp = UArray_at(outer_bits, col);
+                        Bit_T inner = *innerp;
+                        assert(sizeof(inner) == UArray_size(outer_bits));
+
+                        apply(col, row, bit2, Bit_get(inner, row), cl);
+                }
+        }
+}
+
+/********** Bit2_free ********
+ *
+ * Free all the memory associated with the bit2 array
+ *
+ * Parameters:
+ *      Bit2_T bit2:  the bit2 array to free
+ *
+ * Returns: none
+ * 
+ * Notes:
+ *      CRE if bit2 or *bit2 is null
+ *
+ ************************/
 /********** Bit2_free ********
  * Dispose of a Bit2 grid and set *bit2 to NULL.
  *
